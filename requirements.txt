@@ -1,0 +1,8 @@
+black==23.3.0
+colorlog==6.7.0
+deepdiff
+homeassistant>=2023.7
+pip>=21.0
+pylint>=2.17.3
+pypentair>=0.1.0
+ruff==0.0.255
