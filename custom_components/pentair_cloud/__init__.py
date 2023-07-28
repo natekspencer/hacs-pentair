@@ -15,14 +15,7 @@ from .entity import PentairDataUpdateCoordinator
 
 _LOGGER = logging.getLogger(__name__)
 
-PLATFORMS = [
-    # Platform.BINARY_SENSOR,
-    # Platform.LIGHT,
-    # Platform.NUMBER,
-    # Platform.SELECT,
-    Platform.SENSOR,
-    # Platform.SWITCH,
-]
+PLATFORMS = [Platform.BINARY_SENSOR, Platform.SENSOR]
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:

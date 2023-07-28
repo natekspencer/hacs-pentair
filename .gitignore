@@ -164,3 +164,6 @@ VS Code Settings / Launch files
 
 # Home Assistant
 config/
+
+# MacOS
+.DS_Store
