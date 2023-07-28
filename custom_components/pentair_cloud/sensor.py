@@ -4,6 +4,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import datetime
+from time import time
 from typing import Any
 
 from homeassistant.components.sensor import (
@@ -13,7 +14,7 @@ from homeassistant.components.sensor import (
     SensorStateClass,
 )
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import EntityCategory, UnitOfMass
+from homeassistant.const import PERCENTAGE, EntityCategory, UnitOfMass
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.util.dt import UTC
@@ -34,6 +35,11 @@ class PentairSensorEntityDescription(SensorEntityDescription, RequiredKeysMixin)
     """Pentair sensor entity description."""
 
 
+def convert_timestamp(_ts: float) -> datetime:
+    """Convert a timestamp to a datetime."""
+    return datetime.fromtimestamp(_ts / (1000 if _ts > time() else 1), UTC)
+
+
 SENSOR_MAP: dict[str | None, tuple[PentairSensorEntityDescription, ...]] = {
     None: (
         PentairSensorEntityDescription(
@@ -41,9 +47,18 @@ SENSOR_MAP: dict[str | None, tuple[PentairSensorEntityDescription, ...]] = {
             device_class=SensorDeviceClass.TIMESTAMP,
             entity_category=EntityCategory.DIAGNOSTIC,
             translation_key="last_report",
-            value_fn=lambda data: datetime.fromtimestamp(
-                data["lastReport"] / 1000, UTC
-            ),
+            value_fn=lambda data: convert_timestamp(data["lastReport"]),
+        ),
+    ),
+    "PPA0": (
+        PentairSensorEntityDescription(
+            key="battery_level",
+            device_class=SensorDeviceClass.BATTERY,
+            entity_category=EntityCategory.DIAGNOSTIC,
+            native_unit_of_measurement=PERCENTAGE,
+            suggested_display_precision=1,
+            translation_key="battery_level",
+            value_fn=lambda data: min(int(data["fields"]["bvl"]) * 100 / 8, 100),
         ),
     ),
     "SSS1": (

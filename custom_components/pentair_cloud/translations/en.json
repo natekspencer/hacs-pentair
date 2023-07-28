@@ -26,6 +26,29 @@
     }
   },
   "entity": {
+    "binary_sensor": {
+      "battery_level": {
+        "name": "Battery level"
+      },
+      "low_battery": {
+        "name": "Low battery"
+      },
+      "online": {
+        "name": "Online"
+      },
+      "power": {
+        "name": "Power"
+      },
+      "primary_pump": {
+        "name": "Primary pump"
+      },
+      "secondary_pump": {
+        "name": "Secondary pump"
+      },
+      "water_level": {
+        "name": "Water level"
+      }
+    },
     "sensor": {
       "average_salt_usage_per_day": {
         "name": "Average daily salt usage"
