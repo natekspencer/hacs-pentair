@@ -1,10 +1,9 @@
 """Support for Pentair binary sensors."""
+
 from __future__ import annotations
 
 from collections.abc import Callable
 from dataclasses import dataclass
-from datetime import datetime
-from time import time
 
 from homeassistant.components.binary_sensor import (
     BinarySensorDeviceClass,
@@ -15,10 +14,10 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.util.dt import UTC
 
 from .const import DOMAIN
 from .entity import PentairDataUpdateCoordinator, PentairEntity
+from .helpers import get_field_value
 
 
 @dataclass
@@ -35,12 +34,14 @@ class PentairBinarySensorEntityDescription(
     """Pentair binary sensor entity description."""
 
 
-def convert_timestamp(_ts: float) -> datetime:
-    """Convert a timestamp to a datetime."""
-    return datetime.fromtimestamp(_ts / (1000 if _ts > time() else 1), UTC)
-
-
 SENSOR_MAP: dict[str | None, tuple[PentairBinarySensorEntityDescription, ...]] = {
+    "IF31": (
+        PentairBinarySensorEntityDescription(
+            key="pump_enabled",
+            translation_key="pump_enabled",
+            is_on=lambda data: get_field_value("s25", data),
+        ),
+    ),
     "PPA0": (
         PentairBinarySensorEntityDescription(
             key="low_battery",

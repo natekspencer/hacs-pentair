@@ -1,10 +1,10 @@
 """Support for Pentair sensors."""
+
 from __future__ import annotations
 
 from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import datetime
-from time import time
 from typing import Any
 
 from homeassistant.components.sensor import (
@@ -14,13 +14,22 @@ from homeassistant.components.sensor import (
     SensorStateClass,
 )
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import PERCENTAGE, EntityCategory, UnitOfMass
+from homeassistant.const import (
+    PERCENTAGE,
+    SIGNAL_STRENGTH_DECIBELS_MILLIWATT,
+    EntityCategory,
+    UnitOfMass,
+    UnitOfPower,
+    UnitOfPressure,
+    UnitOfVolumeFlowRate,
+)
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.util.dt import UTC
+from homeassistant.util.dt import as_local
 
 from .const import DOMAIN
 from .entity import PentairDataUpdateCoordinator, PentairEntity
+from .helpers import convert_timestamp, get_field_value
 
 
 @dataclass
@@ -35,11 +44,6 @@ class PentairSensorEntityDescription(SensorEntityDescription, RequiredKeysMixin)
     """Pentair sensor entity description."""
 
 
-def convert_timestamp(_ts: float) -> datetime:
-    """Convert a timestamp to a datetime."""
-    return datetime.fromtimestamp(_ts / (1000 if _ts > time() else 1), UTC)
-
-
 SENSOR_MAP: dict[str | None, tuple[PentairSensorEntityDescription, ...]] = {
     None: (
         PentairSensorEntityDescription(
@@ -48,6 +52,48 @@ SENSOR_MAP: dict[str | None, tuple[PentairSensorEntityDescription, ...]] = {
             entity_category=EntityCategory.DIAGNOSTIC,
             translation_key="last_report",
             value_fn=lambda data: convert_timestamp(data["lastReport"]),
+        ),
+    ),
+    "IF31": (
+        PentairSensorEntityDescription(
+            key="device_time",
+            device_class=SensorDeviceClass.TIMESTAMP,
+            entity_category=EntityCategory.DIAGNOSTIC,
+            entity_registry_enabled_default=False,
+            translation_key="device_time",
+            value_fn=lambda data: as_local(get_field_value("s1", data)),
+        ),
+        PentairSensorEntityDescription(
+            key="estimated_flow",
+            device_class=SensorDeviceClass.VOLUME_FLOW_RATE,
+            native_unit_of_measurement=UnitOfVolumeFlowRate.GALLONS_PER_MINUTE,
+            value_fn=lambda data: get_field_value("s26", data),
+        ),
+        PentairSensorEntityDescription(
+            key="motor_speed",
+            native_unit_of_measurement=PERCENTAGE,
+            translation_key="motor_speed",
+            value_fn=lambda data: get_field_value("s19", data),
+        ),
+        PentairSensorEntityDescription(
+            key="power",
+            device_class=SensorDeviceClass.POWER,
+            native_unit_of_measurement=UnitOfPower.WATT,
+            value_fn=lambda data: get_field_value("s18", data),
+        ),
+        PentairSensorEntityDescription(
+            key="pressure",
+            device_class=SensorDeviceClass.PRESSURE,
+            native_unit_of_measurement=UnitOfPressure.PSI,
+            value_fn=lambda data: get_field_value("s17", data),
+        ),
+        PentairSensorEntityDescription(
+            key="rssi",
+            device_class=SensorDeviceClass.SIGNAL_STRENGTH,
+            entity_category=EntityCategory.DIAGNOSTIC,
+            entity_registry_enabled_default=False,
+            native_unit_of_measurement=SIGNAL_STRENGTH_DECIBELS_MILLIWATT,
+            value_fn=lambda data: get_field_value("s13", data),
         ),
     ),
     "PPA0": (
