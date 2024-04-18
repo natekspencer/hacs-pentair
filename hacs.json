@@ -3,5 +3,5 @@
   "homeassistant": "2023.7.0",
   "render_readme": true,
   "zip_release": true,
-  "filename": "pentair.zip"
+  "filename": "pentair_cloud.zip"
 }
