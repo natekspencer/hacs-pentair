@@ -30,7 +30,7 @@ There are two main ways to install this custom component within your Home Assist
 
 2. Manual Installation:
    1. Download or clone this repository
-   2. Copy the contents of the folder **custom_components/pentair** into the same file structure on your Home Assistant instance
+   2. Copy the contents of the folder **custom_components/pentair_cloud** into the same file structure on your Home Assistant instance
       - An easy way to do this is using the [Samba add-on](https://www.home-assistant.io/getting-started/configuration/#editing-configuration-via-sambawindows-networking), but feel free to do so however you want
    3. Restart your Home Assistant instance and then proceed to the _Configuration_ section below.
 
