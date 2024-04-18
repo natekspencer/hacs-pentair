@@ -1,18 +1,10 @@
 {
   "config": {
     "step": {
-      "user": {
-        "data": {
-          "username": "Username",
-          "password": "Password"
-        }
-      },
+      "user": { "data": { "username": "Username", "password": "Password" } },
       "reauth_confirm": {
         "description": "Reauthenticate Integration",
-        "data": {
-          "username": "Username",
-          "password": "Password"
-        }
+        "data": { "username": "Username", "password": "Password" }
       }
     },
     "error": {
@@ -27,41 +19,22 @@
   },
   "entity": {
     "binary_sensor": {
-      "battery_level": {
-        "name": "Battery level"
-      },
-      "low_battery": {
-        "name": "Low battery"
-      },
-      "online": {
-        "name": "Online"
-      },
-      "power": {
-        "name": "Power"
-      },
-      "primary_pump": {
-        "name": "Primary pump"
-      },
-      "secondary_pump": {
-        "name": "Secondary pump"
-      },
-      "water_level": {
-        "name": "Water level"
-      }
+      "battery_level": { "name": "Battery level" },
+      "low_battery": { "name": "Low battery" },
+      "online": { "name": "Online" },
+      "power": { "name": "Power" },
+      "primary_pump": { "name": "Primary pump" },
+      "pump_enabled": { "name": "Pump enabled" },
+      "secondary_pump": { "name": "Secondary pump" },
+      "water_level": { "name": "Water level" }
     },
     "sensor": {
-      "average_salt_usage_per_day": {
-        "name": "Average daily salt usage"
-      },
-      "battery_level": {
-        "name": "Battery level"
-      },
-      "last_report": {
-        "name": "Last report"
-      },
-      "salt_level": {
-        "name": "Salt level"
-      }
+      "average_salt_usage_per_day": { "name": "Average daily salt usage" },
+      "battery_level": { "name": "Battery level" },
+      "device_time": { "name": "Device time" },
+      "last_report": { "name": "Last report" },
+      "motor_speed": { "name": "Motor speed" },
+      "salt_level": { "name": "Salt level" }
     }
   }
 }
