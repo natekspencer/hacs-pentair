@@ -110,7 +110,7 @@ SENSOR_MAP: dict[str | None, tuple[PentairSensorEntityDescription, ...]] = {
             state_class=SensorStateClass.MEASUREMENT,
             suggested_display_precision=1,
             translation_key="battery_level",
-            value_fn=lambda data: min(int(data["fields"]["bvl"]) * 100 / 8, 100),
+            value_fn=lambda data: min(int(get_field_value("bvl", data)) * 100 / 8, 100),
         ),
     ),
     "SSS1": (
@@ -120,7 +120,7 @@ SENSOR_MAP: dict[str | None, tuple[PentairSensorEntityDescription, ...]] = {
             native_unit_of_measurement=UnitOfMass.POUNDS,
             state_class=SensorStateClass.MEASUREMENT,
             translation_key="average_salt_usage_per_day",
-            value_fn=lambda data: data["fields"]["average_salt_usage_per_day"],
+            value_fn=lambda data: get_field_value("average_salt_usage_per_day", data),
         ),
         PentairSensorEntityDescription(
             key="battery_level",
@@ -128,13 +128,13 @@ SENSOR_MAP: dict[str | None, tuple[PentairSensorEntityDescription, ...]] = {
             icon="mdi:battery",
             state_class=SensorStateClass.MEASUREMENT,
             translation_key="battery_level",
-            value_fn=lambda data: data["fields"]["battery_level"],
+            value_fn=lambda data: get_field_value("battery_level", data),
         ),
         PentairSensorEntityDescription(
             key="salt_level",
             state_class=SensorStateClass.MEASUREMENT,
             translation_key="salt_level",
-            value_fn=lambda data: data["fields"]["salt_level"],
+            value_fn=lambda data: get_field_value("salt_level", data),
         ),
     ),
 }
