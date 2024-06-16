@@ -29,6 +29,6 @@ jobs:
           zip pentair_cloud.zip -r ./
 
       - name: Upload ZIP file to release
-        uses: softprops/action-gh-release@v0.1.15
+        uses: softprops/action-gh-release@v2
         with:
           files: ${{ github.workspace }}/custom_components/pentair_cloud/pentair_cloud.zip
