@@ -11,7 +11,7 @@ from homeassistant.core import HomeAssistant
 from .const import DOMAIN
 from .coordinator import PentairDataUpdateCoordinator
 
-TO_REDACT = {}
+TO_REDACT = {"arn", "deviceId", "email", "userId"}
 
 
 async def async_get_config_entry_diagnostics(
@@ -19,4 +19,11 @@ async def async_get_config_entry_diagnostics(
 ) -> dict[str, Any]:
     """Return diagnostics for a config entry."""
     coordinator: PentairDataUpdateCoordinator = hass.data[DOMAIN][entry.entry_id]
-    return async_redact_data(coordinator.data, TO_REDACT)
+    diagnostics_data = {
+        "get_devices": coordinator.data,
+        "get_device": {
+            "***" + device_coordinator.device_id[-4:]: device_coordinator.data
+            for device_coordinator in coordinator.device_coordinators
+        },
+    }
+    return async_redact_data(diagnostics_data, TO_REDACT)

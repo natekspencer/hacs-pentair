@@ -24,4 +24,4 @@ def get_field_value(key: str, data: dict) -> Any:
     name, value = get_api_field_name_and_value(key, data["fields"].get(key))
     if key not in data["fields"]:
         _LOGGER.warning('%s key "%s" is missing in fields data', name, key)
-    return value
+    return value.get("value", value)

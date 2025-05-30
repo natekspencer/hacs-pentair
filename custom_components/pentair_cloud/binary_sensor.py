@@ -16,7 +16,8 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .const import DOMAIN
-from .entity import PentairDataUpdateCoordinator, PentairEntity
+from .coordinator import PentairDataUpdateCoordinator
+from .entity import PentairEntity
 from .helpers import get_field_value
 
 
