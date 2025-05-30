@@ -1,4 +1,5 @@
 """Pentair entities."""
+
 from __future__ import annotations
 
 from typing import Any
@@ -8,17 +9,17 @@ from homeassistant.helpers.entity import DeviceInfo, EntityDescription
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import DOMAIN
-from .coordinator import PentairDataUpdateCoordinator
+from .coordinator import PentairDeviceDataUpdateCoordinator
 
 
-class PentairEntity(CoordinatorEntity[PentairDataUpdateCoordinator]):
+class PentairEntity(CoordinatorEntity[PentairDeviceDataUpdateCoordinator]):
     """Base class for Pentair entities."""
 
     _attr_has_entity_name = True
 
     def __init__(
         self,
-        coordinator: PentairDataUpdateCoordinator,
+        coordinator: PentairDeviceDataUpdateCoordinator,
         config_entry: ConfigEntry,
         description: EntityDescription,
         device_id: str,
@@ -38,9 +39,9 @@ class PentairEntity(CoordinatorEntity[PentairDataUpdateCoordinator]):
             model=device["pname"]
             + (f" ({model})" if (model := info.get("model")) else ""),
             name=info["nickName"],
-            sw_version=device.get("currentFWVersion"),
+            sw_version=device.get("fwVersion"),
         )
 
     def get_device(self) -> Any | None:
         """Get the device from the coordinator."""
-        return self.coordinator.get_device(self._device_id)
+        return self.coordinator.get_device_data()
