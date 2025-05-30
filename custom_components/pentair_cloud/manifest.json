@@ -8,6 +8,6 @@
   "iot_class": "cloud_polling",
   "issue_tracker": "https://github.com/natekspencer/hacs-pentair/issues",
   "loggers": ["custom_components.pentair_cloud", "pypentair"],
-  "requirements": ["pypentair==0.2.1"],
+  "requirements": ["pypentair==0.3.0"],
   "version": "0.0.0"
 }
