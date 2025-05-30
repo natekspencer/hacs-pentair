@@ -30,6 +30,8 @@ from . import PentairConfigEntry
 from .entity import PentairEntity
 from .helpers import convert_timestamp, get_field_value
 
+UNIT_MAP = {"kg": UnitOfMass.KILOGRAMS}
+
 
 @dataclass(frozen=True, kw_only=True)
 class PentairSensorEntityDescription(SensorEntityDescription):
@@ -142,18 +144,46 @@ async def async_setup_entry(
     """Set up Pentair sensors using config entry."""
     coordinator = config_entry.runtime_data
 
-    entities = [
-        PentairSensorEntity(
-            coordinator=coordinator,
-            config_entry=config_entry,
-            description=description,
-            device_id=device["deviceId"],
-        )
-        for device in coordinator.get_devices()
-        for device_type, descriptions in SENSOR_MAP.items()
-        for description in descriptions
-        if device_type is None or device["deviceType"] == device_type
-    ]
+    entities: list[PentairSensorEntity] = []
+    for device_coordinator in coordinator.device_coordinators:
+        if data := device_coordinator.get_device_data():
+            entities.append(
+                PentairSensorEntity(
+                    coordinator=device_coordinator,
+                    config_entry=config_entry,
+                    description=PentairSensorEntityDescription(
+                        key="last_report",
+                        device_class=SensorDeviceClass.TIMESTAMP,
+                        entity_category=EntityCategory.DIAGNOSTIC,
+                        translation_key="last_report",
+                        value_fn=lambda data: convert_timestamp(data["delivered"]),
+                    ),
+                    device_id=data["deviceId"],
+                )
+            )
+            for field, field_data in data.get("fields", {}).items():
+                unit = UNIT_MAP.get(field_data["unit"])
+                entity_description = PentairSensorEntityDescription(
+                    key=field,
+                    name=field_data["name"].strip().capitalize(),
+                    entity_category=(
+                        None
+                        if field_data["category"] == "data"
+                        else EntityCategory.DIAGNOSTIC
+                    ),
+                    native_unit_of_measurement=unit,
+                    state_class=SensorStateClass.MEASUREMENT if unit else None,
+                    translation_key=field,
+                    value_fn=lambda data, field=field: get_field_value(field, data),
+                )
+                entities.append(
+                    PentairSensorEntity(
+                        coordinator=device_coordinator,
+                        config_entry=config_entry,
+                        description=entity_description,
+                        device_id=data["deviceId"],
+                    )
+                )
 
     if not entities:
         return
