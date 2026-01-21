@@ -51,7 +51,7 @@ SENSOR_MAP: dict[str | None, tuple[PentairSensorEntityDescription, ...]] = {
             device_class=SensorDeviceClass.TIMESTAMP,
             entity_category=EntityCategory.DIAGNOSTIC,
             translation_key="last_report",
-            value_fn=lambda data: convert_timestamp(data["lastReport"]),
+            value_fn=lambda data: convert_timestamp(data.get("lastReport")) if data and data.get("lastReport") else None,
         ),
     ),
     "IF31": (

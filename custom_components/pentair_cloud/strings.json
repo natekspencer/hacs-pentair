@@ -36,6 +36,16 @@
       "secondary_pump": { "name": "Secondary pump" },
       "water_level": { "name": "Water level" }
     },
+    "number": {
+      "program_gpm": { "name": "GPM" },
+      "program_speed": { "name": "Speed" }
+    },
+    "select": {
+      "running_program": { "name": "Running program" }
+    },
+    "switch": {
+      "pump_enabled": { "name": "Pump enabled" }
+    },
     "sensor": {
       "average_salt_usage_per_day": { "name": "Average daily salt usage" },
       "battery_level": { "name": "Battery level" },
