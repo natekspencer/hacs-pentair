@@ -119,6 +119,8 @@ class PentairBinarySensorEntity(PentairEntity, BinarySensorEntity):
     entity_description: PentairBinarySensorEntityDescription
 
     @property
-    def is_on(self) -> bool:
+    def is_on(self) -> bool | None:
         """Return true if the binary sensor is on."""
-        return self.entity_description.is_on(self.get_device())
+        if isinstance(device_data := self.get_device(), dict):
+            return self.entity_description.is_on(device_data)
+        return None

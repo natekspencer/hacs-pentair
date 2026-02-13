@@ -71,9 +71,7 @@ class PentairDataUpdateCoordinator(DataUpdateCoordinator):
                 _LOGGER.debug("Devices updated: %s", diff if diff else "no changes")
                 self.devices = devices
         except Exception as err:  # pylint: disable=broad-except
-            _LOGGER.error(
-                "Unknown exception while updating Pentair data: %s", err, exc_info=1
-            )
+            _LOGGER.exception("Unknown exception while updating Pentair data: %s", err)
             raise UpdateFailed(err) from err
         return self.devices
 
@@ -119,12 +117,14 @@ class PentairDeviceDataUpdateCoordinator(DataUpdateCoordinator):
                     report_repetition=True,
                     verbose_level=2,
                 )
-                _LOGGER.debug("Devices updated: %s", diff if diff else "no changes")
+                _LOGGER.debug(
+                    "Device %s updated: %s",
+                    self.device_id,
+                    diff if diff else "no changes",
+                )
                 return device
         except Exception as err:  # pylint: disable=broad-except
-            _LOGGER.error(
-                "Unknown exception while updating Pentair data: %s", err, exc_info=1
-            )
+            _LOGGER.exception("Unknown exception while updating Pentair data: %s", err)
             raise UpdateFailed(err) from err
         else:
             return None

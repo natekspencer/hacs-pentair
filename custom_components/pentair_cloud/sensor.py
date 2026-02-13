@@ -162,13 +162,13 @@ async def async_setup_entry(
                 )
             )
             for field, field_data in data.get("fields", {}).items():
-                unit = UNIT_MAP.get(field_data["unit"])
+                unit = UNIT_MAP.get(field_data.get("unit"))
                 entity_description = PentairSensorEntityDescription(
                     key=field,
-                    name=field_data["name"].strip().capitalize(),
+                    name=field_data.get("name", field).strip().capitalize(),
                     entity_category=(
                         None
-                        if field_data["category"] == "data"
+                        if field_data.get("category") == "data"
                         else EntityCategory.DIAGNOSTIC
                     ),
                     native_unit_of_measurement=unit,
@@ -199,4 +199,6 @@ class PentairSensorEntity(PentairEntity, SensorEntity):
     @property
     def native_value(self) -> str | int | datetime | None:
         """Return the value reported by the sensor."""
-        return self.entity_description.value_fn(self.get_device())
+        if isinstance(device_data := self.get_device(), dict):
+            return self.entity_description.value_fn(device_data)
+        return None

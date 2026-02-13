@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import asyncio
+
 from pypentair import Pentair, PentairAuthenticationError
 
 from homeassistant.config_entries import ConfigEntry
@@ -48,8 +50,14 @@ async def async_setup_entry(hass: HomeAssistant, entry: PentairConfigEntry) -> b
         device_coordinator = PentairDeviceDataUpdateCoordinator(
             hass=hass, config_entry=entry, client=client, device_id=device["deviceId"]
         )
-        await device_coordinator.async_config_entry_first_refresh()
         coordinator.device_coordinators.append(device_coordinator)
+
+    await asyncio.gather(
+        *(
+            dc.async_config_entry_first_refresh()
+            for dc in coordinator.device_coordinators
+        )
+    )
 
     entry.runtime_data = coordinator
 
