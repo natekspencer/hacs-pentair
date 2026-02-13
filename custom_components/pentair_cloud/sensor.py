@@ -13,7 +13,6 @@ from homeassistant.components.sensor import (
     SensorEntityDescription,
     SensorStateClass,
 )
-from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (
     PERCENTAGE,
     SIGNAL_STRENGTH_DECIBELS_MILLIWATT,
@@ -24,24 +23,19 @@ from homeassistant.const import (
     UnitOfVolumeFlowRate,
 )
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 from homeassistant.util.dt import as_local
 
-from .const import DOMAIN
-from .entity import PentairDataUpdateCoordinator, PentairEntity
+from . import PentairConfigEntry
+from .entity import PentairEntity
 from .helpers import convert_timestamp, get_field_value
 
 
-@dataclass
-class RequiredKeysMixin:
-    """Required keys mixin."""
+@dataclass(frozen=True, kw_only=True)
+class PentairSensorEntityDescription(SensorEntityDescription):
+    """Pentair sensor entity description."""
 
     value_fn: Callable[[dict], Any]
-
-
-@dataclass
-class PentairSensorEntityDescription(SensorEntityDescription, RequiredKeysMixin):
-    """Pentair sensor entity description."""
 
 
 SENSOR_MAP: dict[str | None, tuple[PentairSensorEntityDescription, ...]] = {
@@ -142,11 +136,11 @@ SENSOR_MAP: dict[str | None, tuple[PentairSensorEntityDescription, ...]] = {
 
 async def async_setup_entry(
     hass: HomeAssistant,
-    config_entry: ConfigEntry,
-    async_add_entities: AddEntitiesCallback,
+    config_entry: PentairConfigEntry,
+    async_add_entities: AddConfigEntryEntitiesCallback,
 ) -> None:
     """Set up Pentair sensors using config entry."""
-    coordinator: PentairDataUpdateCoordinator = hass.data[DOMAIN][config_entry.entry_id]
+    coordinator = config_entry.runtime_data
 
     entities = [
         PentairSensorEntity(

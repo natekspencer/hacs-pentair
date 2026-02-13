@@ -1,14 +1,17 @@
 """Pentair entities."""
+
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
-from homeassistant.config_entries import ConfigEntry
 from homeassistant.helpers.entity import DeviceInfo, EntityDescription
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import DOMAIN
 from .coordinator import PentairDataUpdateCoordinator
+
+if TYPE_CHECKING:
+    from . import PentairConfigEntry
 
 
 class PentairEntity(CoordinatorEntity[PentairDataUpdateCoordinator]):
@@ -19,7 +22,7 @@ class PentairEntity(CoordinatorEntity[PentairDataUpdateCoordinator]):
     def __init__(
         self,
         coordinator: PentairDataUpdateCoordinator,
-        config_entry: ConfigEntry,
+        config_entry: PentairConfigEntry,
         description: EntityDescription,
         device_id: str,
     ) -> None:

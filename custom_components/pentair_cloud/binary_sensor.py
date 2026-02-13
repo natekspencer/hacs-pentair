@@ -10,28 +10,20 @@ from homeassistant.components.binary_sensor import (
     BinarySensorEntity,
     BinarySensorEntityDescription,
 )
-from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
-from .const import DOMAIN
-from .entity import PentairDataUpdateCoordinator, PentairEntity
+from . import PentairConfigEntry
+from .entity import PentairEntity
 from .helpers import get_field_value
 
 
-@dataclass
-class RequiredKeysMixin:
-    """Required keys mixin."""
+@dataclass(frozen=True, kw_only=True)
+class PentairBinarySensorEntityDescription(BinarySensorEntityDescription):
+    """Pentair binary sensor entity description."""
 
     is_on: Callable[[dict], bool]
-
-
-@dataclass
-class PentairBinarySensorEntityDescription(
-    BinarySensorEntityDescription, RequiredKeysMixin
-):
-    """Pentair binary sensor entity description."""
 
 
 SENSOR_MAP: dict[str | None, tuple[PentairBinarySensorEntityDescription, ...]] = {
@@ -48,8 +40,9 @@ SENSOR_MAP: dict[str | None, tuple[PentairBinarySensorEntityDescription, ...]] =
             device_class=BinarySensorDeviceClass.BATTERY,
             entity_category=EntityCategory.DIAGNOSTIC,
             translation_key="low_battery",
-            is_on=lambda data: int(data["fields"]["bvl"]) < 3
-            or data["fields"]["bft"] == "4",
+            is_on=lambda data: (
+                int(data["fields"]["bvl"]) < 3 or data["fields"]["bft"] == "4"
+            ),
         ),
         PentairBinarySensorEntityDescription(
             key="battery_charging",
@@ -95,11 +88,11 @@ SENSOR_MAP: dict[str | None, tuple[PentairBinarySensorEntityDescription, ...]] =
 
 async def async_setup_entry(
     hass: HomeAssistant,
-    config_entry: ConfigEntry,
-    async_add_entities: AddEntitiesCallback,
+    config_entry: PentairConfigEntry,
+    async_add_entities: AddConfigEntryEntitiesCallback,
 ) -> None:
     """Set up Pentair binary sensors using config entry."""
-    coordinator: PentairDataUpdateCoordinator = hass.data[DOMAIN][config_entry.entry_id]
+    coordinator = config_entry.runtime_data
 
     entities = [
         PentairBinarySensorEntity(
