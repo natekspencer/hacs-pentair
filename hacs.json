@@ -1,6 +1,6 @@
 {
   "name": "Pentair Home",
-  "homeassistant": "2023.7.0",
+  "homeassistant": "2026.1.0",
   "render_readme": true,
   "zip_release": true,
   "filename": "pentair_cloud.zip"
