@@ -1,7 +1,5 @@
 # Home Assistant
-homeassistant>=2024.6
-home-assistant-frontend
-numpy
+homeassistant>=2026.1
 
 # Integration
 pypentair
@@ -10,4 +8,5 @@ deepdiff
 # Development
 colorlog
 pip
-ruff
+pre-commit
+ruff>=0.15.1
