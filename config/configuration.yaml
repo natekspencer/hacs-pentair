@@ -17,3 +17,4 @@ logger:
   logs:
     custom_components.pentair_cloud: debug
     pypentair: debug
+    botocore: debug

@@ -7,7 +7,7 @@
   "integration_type": "hub",
   "iot_class": "cloud_polling",
   "issue_tracker": "https://github.com/natekspencer/hacs-pentair/issues",
-  "loggers": ["custom_components.pentair_cloud", "pypentair"],
+  "loggers": ["custom_components.pentair_cloud", "pypentair", "botocore"],
   "requirements": ["pypentair==0.4.1"],
   "version": "0.0.0"
 }

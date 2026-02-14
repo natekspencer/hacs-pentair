@@ -68,13 +68,18 @@ async def async_setup_entry(hass: HomeAssistant, entry: PentairConfigEntry) -> b
 
 async def async_unload_entry(hass: HomeAssistant, entry: PentairConfigEntry) -> bool:
     """Unload config entry."""
-    unload_ok = await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
-    return unload_ok
+    return await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
 
 
 async def async_remove_entry(hass: HomeAssistant, entry: PentairConfigEntry) -> None:
     """Handle removal of an entry."""
-    await hass.async_add_executor_job(entry.runtime_data.api.logout)
+    client = Pentair(
+        username=entry.data.get(CONF_USERNAME),
+        access_token=entry.data.get(CONF_ACCESS_TOKEN),
+        id_token=entry.data.get(CONF_ID_TOKEN),
+        refresh_token=entry.data.get(CONF_REFRESH_TOKEN),
+    )
+    await hass.async_add_executor_job(client.logout)
 
 
 async def update_listener(hass: HomeAssistant, entry: PentairConfigEntry) -> None:
