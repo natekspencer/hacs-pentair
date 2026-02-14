@@ -13,10 +13,7 @@ from homeassistant.components.sensor import (
     SensorEntityDescription,
     SensorStateClass,
 )
-from homeassistant.const import (
-    EntityCategory,
-    UnitOfMass,
-)
+from homeassistant.const import EntityCategory, UnitOfMass
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
@@ -64,6 +61,8 @@ async def async_setup_entry(
                 )
             )
             for field, field_data in data.get("fields", {}).items():
+                if not isinstance(field_data, dict):
+                    continue
                 unit = UNIT_MAP.get(field_data.get("unit"))
                 entity_description = PentairSensorEntityDescription(
                     key=field,
