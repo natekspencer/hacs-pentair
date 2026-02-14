@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import logging
 
 from pypentair import Pentair, PentairAuthenticationError
 
@@ -19,6 +20,8 @@ from .coordinator import (
 )
 
 type PentairConfigEntry = ConfigEntry[PentairDataUpdateCoordinator]
+
+_LOGGER = logging.getLogger(__name__)
 
 PLATFORMS = [Platform.BINARY_SENSOR, Platform.SENSOR]
 
@@ -79,7 +82,10 @@ async def async_remove_entry(hass: HomeAssistant, entry: PentairConfigEntry) -> 
         id_token=entry.data.get(CONF_ID_TOKEN),
         refresh_token=entry.data.get(CONF_REFRESH_TOKEN),
     )
-    await hass.async_add_executor_job(client.logout)
+    try:
+        await hass.async_add_executor_job(client.logout)
+    except Exception:  # noqa: BLE001
+        _LOGGER.debug("Failed to logout during entry removal", exc_info=True)
 
 
 async def update_listener(hass: HomeAssistant, entry: PentairConfigEntry) -> None:
