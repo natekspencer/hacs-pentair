@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+import asyncio
+import logging
+
 from pypentair import Pentair, PentairAuthenticationError
 
 from homeassistant.config_entries import ConfigEntry
@@ -11,9 +14,14 @@ from homeassistant.exceptions import ConfigEntryAuthFailed, ConfigEntryNotReady
 from homeassistant.helpers.device_registry import DeviceEntry
 
 from .const import CONF_ID_TOKEN, CONF_REFRESH_TOKEN, DOMAIN
-from .entity import PentairDataUpdateCoordinator
+from .coordinator import (
+    PentairDataUpdateCoordinator,
+    PentairDeviceDataUpdateCoordinator,
+)
 
 type PentairConfigEntry = ConfigEntry[PentairDataUpdateCoordinator]
+
+_LOGGER = logging.getLogger(__name__)
 
 PLATFORMS = [Platform.BINARY_SENSOR, Platform.SENSOR]
 
@@ -36,8 +44,23 @@ async def async_setup_entry(hass: HomeAssistant, entry: PentairConfigEntry) -> b
     except Exception as ex:
         raise ConfigEntryNotReady(ex) from ex
 
-    coordinator = PentairDataUpdateCoordinator(hass, client=client)
+    coordinator = PentairDataUpdateCoordinator(
+        hass=hass, config_entry=entry, client=client
+    )
     await coordinator.async_config_entry_first_refresh()
+
+    for device in coordinator.get_devices():
+        device_coordinator = PentairDeviceDataUpdateCoordinator(
+            hass=hass, config_entry=entry, client=client, device_id=device["deviceId"]
+        )
+        coordinator.device_coordinators.append(device_coordinator)
+
+    await asyncio.gather(
+        *(
+            dc.async_config_entry_first_refresh()
+            for dc in coordinator.device_coordinators
+        )
+    )
 
     entry.runtime_data = coordinator
 
@@ -48,13 +71,21 @@ async def async_setup_entry(hass: HomeAssistant, entry: PentairConfigEntry) -> b
 
 async def async_unload_entry(hass: HomeAssistant, entry: PentairConfigEntry) -> bool:
     """Unload config entry."""
-    unload_ok = await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
-    return unload_ok
+    return await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
 
 
 async def async_remove_entry(hass: HomeAssistant, entry: PentairConfigEntry) -> None:
     """Handle removal of an entry."""
-    await hass.async_add_executor_job(entry.runtime_data.api.logout)
+    client = Pentair(
+        username=entry.data.get(CONF_USERNAME),
+        access_token=entry.data.get(CONF_ACCESS_TOKEN),
+        id_token=entry.data.get(CONF_ID_TOKEN),
+        refresh_token=entry.data.get(CONF_REFRESH_TOKEN),
+    )
+    try:
+        await hass.async_add_executor_job(client.logout)
+    except Exception:  # noqa: BLE001
+        _LOGGER.debug("Failed to logout during entry removal", exc_info=True)
 
 
 async def update_listener(hass: HomeAssistant, entry: PentairConfigEntry) -> None:
