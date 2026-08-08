@@ -21,7 +21,12 @@ def convert_timestamp(_ts: float) -> datetime:
 
 def get_field_value(key: str, data: dict) -> Any:
     """Get field value."""
-    name, value = get_api_field_name_and_value(key, data["fields"].get(key))
+    raw = data["fields"].get(key)
+    # Some fields arrive wrapped as {"value": ..., ...}. Unwrap before conversion,
+    # since the per-key conversion functions expect the scalar.
+    if isinstance(raw, dict) and "value" in raw:
+        raw = raw["value"]
+    name, value = get_api_field_name_and_value(key, raw)
     if key not in data["fields"]:
         _LOGGER.warning('%s key "%s" is missing in fields data', name, key)
     return value.get("value", value) if isinstance(value, dict) else value
