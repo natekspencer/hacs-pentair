@@ -55,8 +55,8 @@ class PentairConfigFlow(ConfigFlow, domain=DOMAIN):
             )
         except PentairAuthenticationError:
             errors["base"] = "invalid_auth"
-        except Exception as ex:  # pylint: disable=broad-except
-            _LOGGER.exception(ex)
+        except Exception:  # pylint: disable=broad-except
+            _LOGGER.exception("Unexpected exception")
             errors["base"] = "unknown"
 
         if not errors:

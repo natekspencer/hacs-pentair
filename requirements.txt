@@ -3,10 +3,11 @@ homeassistant>=2026.1
 
 # Integration
 pypentair
-deepdiff
 
 # Development
 colorlog
+isal
 pip
 pre-commit
-ruff>=0.15.1
+ruff>=0.17.0
+zlib-ng
