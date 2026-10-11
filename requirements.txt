@@ -3,7 +3,6 @@ homeassistant>=2026.1
 
 # Integration
 pypentair
-deepdiff
 
 # Development
 colorlog
