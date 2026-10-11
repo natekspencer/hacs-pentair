@@ -11,8 +11,7 @@
 <!-- END AUTO-GENERATED HEADER -->
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://brands.home-assistant.io/pentair_cloud/dark_logo.png">
-  <img alt="Pentair logo" src="https://brands.home-assistant.io/pentair_cloud/logo.png">
+  <img alt="Pentair logo" src="custom_components/pentair_cloud/brand/logo.png">
 </picture>
 
 # Pentair Home for Home Assistant
