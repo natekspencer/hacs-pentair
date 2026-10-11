@@ -84,7 +84,7 @@ async def async_remove_entry(hass: HomeAssistant, entry: PentairConfigEntry) -> 
     )
     try:
         await hass.async_add_executor_job(client.logout)
-    except Exception:  # noqa: BLE001
+    except Exception:
         _LOGGER.debug("Failed to logout during entry removal", exc_info=True)
 
 
