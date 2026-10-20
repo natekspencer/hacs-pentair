@@ -41,46 +41,47 @@ SENSOR_MAP: dict[str | None, tuple[PentairBinarySensorEntityDescription, ...]] =
             entity_category=EntityCategory.DIAGNOSTIC,
             translation_key="low_battery",
             is_on=lambda data: (
-                int(data["fields"]["bvl"]) < 3 or data["fields"]["bft"] == "4"
+                int(get_field_value("bvl", data)) < 3
+                or get_field_value("bft", data) == "4"
             ),
         ),
         PentairBinarySensorEntityDescription(
             key="battery_charging",
             device_class=BinarySensorDeviceClass.BATTERY_CHARGING,
             entity_category=EntityCategory.DIAGNOSTIC,
-            is_on=lambda data: data["fields"]["bch"] != "2",
+            is_on=lambda data: get_field_value("bch", data) != "2",
         ),
         PentairBinarySensorEntityDescription(
             key="online",
             device_class=BinarySensorDeviceClass.CONNECTIVITY,
             entity_category=EntityCategory.DIAGNOSTIC,
             translation_key="online",
-            is_on=lambda data: data["fields"]["online"],
+            is_on=lambda data: get_field_value("online", data),
         ),
         PentairBinarySensorEntityDescription(
             key="power",
             device_class=BinarySensorDeviceClass.POWER,
             entity_category=EntityCategory.DIAGNOSTIC,
             translation_key="power",
-            is_on=lambda data: data["fields"]["acp"] == "1",
+            is_on=lambda data: get_field_value("acp", data) == "1",
         ),
         PentairBinarySensorEntityDescription(
             key="primary_pump",
             device_class=BinarySensorDeviceClass.PROBLEM,
             translation_key="primary_pump",
-            is_on=lambda data: data["fields"]["sts"] == "2",
+            is_on=lambda data: get_field_value("sts", data) == "2",
         ),
         PentairBinarySensorEntityDescription(
             key="secondary_pump",
             device_class=BinarySensorDeviceClass.PROBLEM,
             translation_key="secondary_pump",
-            is_on=lambda data: int(data["fields"]["sts"]) > 0,
+            is_on=lambda data: int(get_field_value("sts", data)) > 0,
         ),
         PentairBinarySensorEntityDescription(
             key="water_level",
             device_class=BinarySensorDeviceClass.PROBLEM,
             translation_key="water_level",
-            is_on=lambda data: data["fields"]["sts"] == 5,
+            is_on=lambda data: int(get_field_value("sts", data)) == 5,
         ),
     ),
 }
@@ -96,15 +97,16 @@ async def async_setup_entry(
 
     entities = [
         PentairBinarySensorEntity(
-            coordinator=coordinator,
+            coordinator=device_coordinator,
             config_entry=config_entry,
             description=description,
-            device_id=device["deviceId"],
+            device_id=data["deviceId"],
         )
-        for device in coordinator.get_devices()
+        for device_coordinator in coordinator.device_coordinators
+        if (data := device_coordinator.get_device_data())
         for device_type, descriptions in SENSOR_MAP.items()
         for description in descriptions
-        if device_type is None or device["deviceType"] == device_type
+        if device_type is None or data["deviceType"] == device_type
     ]
 
     if not entities:
