@@ -24,7 +24,7 @@ Home Assistant integration for Pentair Home devices.
 
 ### HACS (Recommended)
 
-[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=natekspencer&repository=hacs-pentair&category=integration)
+[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=natekspencer&repository=ha-pentair&category=integration)
 
 1. Use the **My Home Assistant** badge above, or from within Home Assistant, click on **HACS**
 2. Click the vertical ellipsis (⋮) → **Custom repositories**
