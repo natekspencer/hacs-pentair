@@ -1,12 +1,12 @@
 <!-- BEGIN AUTO-GENERATED HEADER -->
 
-[![Release](https://img.shields.io/github/v/release/natekspencer/hacs-pentair?style=for-the-badge)](https://github.com/natekspencer/hacs-pentair/releases)
+[![Release](https://img.shields.io/github/v/release/natekspencer/ha-pentair?style=for-the-badge)](https://github.com/natekspencer/ha-pentair/releases)
 [![HACS Badge](https://img.shields.io/badge/HACS-custom-41BDF5.svg?style=for-the-badge)](https://github.com/hacs/integration)
 [![Buy Me A Coffee/Beer](https://img.shields.io/badge/Buy_Me_A_☕/🍺-F16061?style=for-the-badge&logo=ko-fi&logoColor=white&labelColor=grey)](https://ko-fi.com/natekspencer)
 [![Sponsor on GitHub](https://img.shields.io/badge/Sponsor_💜-6f42c1?style=for-the-badge&logo=github&logoColor=white&labelColor=grey)](https://github.com/sponsors/natekspencer)
 
-![Downloads](https://img.shields.io/github/downloads/natekspencer/hacs-pentair/total?style=flat-square)
-![Latest Downloads](https://img.shields.io/github/downloads/natekspencer/hacs-pentair/latest/total?style=flat-square)
+![Downloads](https://img.shields.io/github/downloads/natekspencer/ha-pentair/total?style=flat-square)
+![Latest Downloads](https://img.shields.io/github/downloads/natekspencer/ha-pentair/latest/total?style=flat-square)
 
 <!-- END AUTO-GENERATED HEADER -->
 
@@ -24,11 +24,11 @@ Home Assistant integration for Pentair Home devices.
 
 ### HACS (Recommended)
 
-[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=natekspencer&repository=hacs-pentair&category=integration)
+[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=natekspencer&repository=ha-pentair&category=integration)
 
 1. Use the **My Home Assistant** badge above, or from within Home Assistant, click on **HACS**
 2. Click the vertical ellipsis (⋮) → **Custom repositories**
-3. Enter `natekspencer/hacs-pentair` in the _Repository_ field and select `Integration` in the _Type_ dropdown
+3. Enter `natekspencer/ha-pentair` in the _Repository_ field and select `Integration` in the _Type_ dropdown
 4. Click **ADD**
 5. Close the _Custom repositories_ window
 6. Search for `Pentair Home` and click on the appropriate repository
@@ -70,11 +70,11 @@ I maintain this Home Assistant integration in my spare time. If you find it usef
 - 💜 [Sponsor me on GitHub](https://github.com/sponsors/natekspencer)
 - ☕ [Buy me a coffee / beer](https://ko-fi.com/natekspencer)
 - 💸 [PayPal (direct support)](https://www.paypal.com/paypalme/natekspencer)
-- ⭐ [Star this project](https://github.com/natekspencer/hacs-pentair)
+- ⭐ [Star this project](https://github.com/natekspencer/ha-pentair)
 - 📦 If you’d like to support in other ways, such as donating hardware for testing, feel free to [reach out to me](https://github.com/natekspencer)
 
 ## 📈 Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=natekspencer/hacs-pentair)](https://www.star-history.com/#natekspencer/hacs-pentair)
+[![Star History Chart](https://api.star-history.com/svg?repos=natekspencer/ha-pentair)](https://www.star-history.com/#natekspencer/ha-pentair)
 
 <!-- END AUTO-GENERATED FOOTER -->
